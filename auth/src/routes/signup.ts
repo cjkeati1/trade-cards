@@ -1,8 +1,9 @@
 import express, {Request, Response} from 'express';
 import {body, validationResult} from "express-validator";
-import {RequestValidationError} from "../errors/request-validation-error";
-import {DatabaseConnectionError} from "../errors/database-connection-error";
+import jwt from 'jsonwebtoken';
+
 import {User} from "../models/user";
+import {RequestValidationError} from "../errors/request-validation-error";
 import {BadRequestError} from "../errors/bad-request-error";
 
 const router = express.Router();
@@ -27,12 +28,23 @@ router.post('/api/users/signup', [
     const existingUser = await User.findOne({email});
 
     if (existingUser) {
-        throw new BadRequestError('Email is already in use')
+        throw new BadRequestError('Email is already in use');
     }
 
     // If a user with that email DNE, create one and persist to db
     const user = User.build({email, password});
     await user.save();
+
+    // Generate JWT
+    const userJwt = jwt.sign({
+        id: user.id,
+        email: user.email
+    }, 'asdf');
+
+    // Store it on session object
+    req.session = {
+        jwt: userJwt
+    };
 
     res.status(201).send(user);
 });
