@@ -8,6 +8,7 @@ import {signinRouter} from "./routes/signin";
 import {signupRouter} from "./routes/signup";
 import {errorHandler} from "./middleware/error-handler";
 import {NotFoundError} from "./errors/not-found-error";
+import mongoose from "mongoose";
 
 const app = express();
 app.use(json());
@@ -22,8 +23,24 @@ app.use(errorHandler);
 // User goes to a route that is not defined
 app.all('*', async () => {
     throw new NotFoundError();
-})
-
-app.listen(3000, () => {
-    console.log('Listening on port 3000');
 });
+
+const start = async () => {
+    try {
+        await mongoose.connect('mongodb://cards-auth-mongo-srv:27017/auth', {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true
+        });
+
+        console.log('Connected to MongoDB');
+    } catch (e) {
+        console.log(e);
+    }
+
+    app.listen(3000, () => {
+        console.log('Listening on port 3000');
+    });
+};
+
+start();
