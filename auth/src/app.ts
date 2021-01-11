@@ -16,9 +16,9 @@ app.use(json());
 app.use(
     cookieSession({
         signed: false,
-        secure: true
+        secure: process.env.NODE_ENV !== 'test'
     })
-)
+);
 
 app.use(currentUserRouter);
 app.use(signinRouter);
@@ -28,8 +28,8 @@ app.use(signupRouter);
 // User goes to a route that is not defined
 app.all('*', async (req, res) => {
     throw new NotFoundError();
-})
+});
 
 app.use(errorHandler);
 
-export {app}
+export {app};
