@@ -3,7 +3,9 @@ import React from 'react';
 const Index = () => {
    return (
       <div>
-         Hi !
+        <h1>
+           Landing Page
+        </h1>
       </div>
    );
 };

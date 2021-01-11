@@ -1,37 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cards-auth-depl
+  name: auth-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cards-auth
+      app: auth
   template:
     metadata:
       labels:
-        app: cards-auth
+        app: auth
     spec:
       containers:
-        - name: cards-auth
-          image: cjkeati1/cards-auth
+        - name: auth
+          image: cjkeati1/auth
           env:
+            - name: MONGO_URI
+              value: 'mongodb://auth-mongo-srv:27017/auth'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cards-auth-srv
+  name: auth-srv
 spec:
   selector:
-    app: cards-auth
+    app: auth
   ports:
-    - name: cards-auth
+    - name: auth
       protocol: TCP
       port: 3000
       targetPort: 3000
