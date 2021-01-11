@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cards-client-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cards-client
+  template:
+    metadata:
+      labels:
+        app: cards-client
+    spec:
+      containers:
+        - name: cards-client
+          image: cjkeati1/cards-client
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cards-client-srv
+spec:
+  selector:
+    app: cards-client
+  ports:
+    - name: cards-client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

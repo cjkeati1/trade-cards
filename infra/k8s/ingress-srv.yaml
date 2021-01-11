@@ -14,3 +14,7 @@ spec:
             backend:
               serviceName: cards-auth-srv
               servicePort: 3000
+          - path: /?(.*)
+            backend:
+              serviceName: cards-client-srv
+              servicePort: 3000
