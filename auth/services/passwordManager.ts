@@ -7,7 +7,7 @@ const getPasswordBuffer = async (password: string, salt: string) => {
     return (await scryptAsync(password, salt, 64)) as Buffer;
 };
 
-export class Password {
+export class PasswordManager {
     static toHash = async (password: string) => {
         const salt = randomBytes(8).toString('hex');
         const buf = await getPasswordBuffer(password, salt);
