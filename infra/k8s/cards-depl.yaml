@@ -16,6 +16,8 @@ spec:
         - name: cards
           image: cjkeati1/cards
           env:
+            - name: MONGO_URI
+              value: 'mongodb://cards-mongo-srv:27017/cards'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
