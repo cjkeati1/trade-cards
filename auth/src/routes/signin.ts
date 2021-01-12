@@ -2,9 +2,9 @@ import express, {Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 
 import {User} from "../models/user";
-import {BadRequestError} from "../errors/bad-request-error";
-import {validateRequest} from "../middlewares/validate-request";
+
 import {PasswordManager} from "../../services/passwordManager";
+import {BadRequestError, validateRequest} from "@ckcards/common";
 
 const router = express.Router();
 
@@ -34,7 +34,8 @@ router.post('/api/users/signin', validateRequest,
                 id: existingUser.id,
                 email: existingUser.email
             },
-            process.env.JWT_KEY! // The ! tells TS that we 100% know JWT_KEY will be defined
+            process.env.JWT_KEY! // The ! tells TS that we 100% know JWT_KEY will be
+                                 // defined
         );
 
         // Store it on session object
