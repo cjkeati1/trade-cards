@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cards-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cards
+  template:
+    metadata:
+      labels:
+        app: cards
+    spec:
+      containers:
+        - name: cards
+          image: cjkeati1/cards
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cards-srv
+spec:
+  selector:
+    app: cards
+  ports:
+    - name: cards
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

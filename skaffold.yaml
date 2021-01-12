@@ -24,3 +24,11 @@ build:
         manual:
           - src: '**/*.js'
             dest: .
+    - image: cjkeati1/cards
+      context: cards
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

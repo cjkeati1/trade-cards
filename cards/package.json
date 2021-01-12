@@ -7,6 +7,13 @@
     "start": "ts-node-dev src/index.ts",
     "test": "jest --watchAll --no-cache"
   },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./src/test/setup.ts"
+    ]
+  },
   "dependencies": {
     "@ckcards/common": "^1.0.8",
     "@types/cookie-session": "^2.0.42",
