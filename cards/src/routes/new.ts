@@ -1,6 +1,7 @@
 import express, {Request, Response} from "express";
 import {requireAuth, validateRequest, CardCondition} from "@ckcards/common";
 import {body} from "express-validator";
+import {Card} from "../models/card";
 
 const router = express.Router();
 
@@ -19,7 +20,19 @@ router.post('/api/cards', requireAuth, requireAuth, [
     body('price')
         .isFloat({gt: 0})
         .withMessage('Price must be greater than 0')
-], validateRequest, (req: Request, res: Response) => {
-    res.sendStatus(200);
+], validateRequest, async (req: Request, res: Response) => {
+    const {title, condition, description, price} = req.body;
+
+    const card = Card.build({
+        title,
+        condition,
+        description,
+        price,
+        userId: req.currentUser!.id
+    });
+
+    await card.save();
+
+    res.status(201).send(card);
 });
 export {router as createCardRouter};

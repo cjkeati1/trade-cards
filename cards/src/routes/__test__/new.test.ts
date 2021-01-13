@@ -88,6 +88,6 @@ it('creates a card with valid inputs', async () => {
             description: 'Description',
             price: 20
         })
-        .expect(200);
+        .expect(201);
 
 });

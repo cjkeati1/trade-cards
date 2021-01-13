@@ -5,6 +5,7 @@ import cookieSession from "cookie-session";
 
 import {errorHandler, NotFoundError, currentUser} from "@ckcards/common";
 import {createCardRouter} from "./routes/new";
+import {showCardRouter} from "./routes/show";
 
 const app = express();
 app.set('trust proxy', true);
@@ -19,6 +20,7 @@ app.use(
 
 app.use(currentUser);
 
+app.use(showCardRouter);
 app.use(createCardRouter);
 
 // User goes to a route that is not defined
