@@ -9,4 +9,6 @@ export * from './errors/request-validation-error';
 export * from './middlewares/current-user';
 export * from './middlewares/error-handler';
 export * from './middlewares/require-auth';
-export * from './middlewares/validate-request'
+export * from './middlewares/validate-request';
+
+export * from './types/card-condition';
