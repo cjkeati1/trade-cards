@@ -3,7 +3,8 @@ import 'express-async-errors';
 import {json} from 'body-parser';
 import cookieSession from "cookie-session";
 
-import {errorHandler, NotFoundError} from "@ckcards/common";
+import {errorHandler, NotFoundError, currentUser} from "@ckcards/common";
+import {createCardRouter} from "./routes/new";
 
 const app = express();
 app.set('trust proxy', true);
@@ -15,6 +16,9 @@ app.use(
     })
 );
 
+app.use(currentUser);
+
+app.use(createCardRouter);
 
 // User goes to a route that is not defined
 app.all('*', async () => {
