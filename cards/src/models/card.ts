@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
+import {CardCondition} from "@ckcards/common";
 
 interface CardAttrs {
     title: string;
+    condition: CardCondition;
     description: string;
     price: number;
     userId: string;
@@ -13,6 +15,7 @@ interface CardModel extends mongoose.Model<CardDoc> {
 
 interface CardDoc extends mongoose.Document {
     title: string;
+    condition: CardCondition;
     description: string;
     price: number;
     userId: string;
@@ -23,9 +26,13 @@ const cardSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        condition: {
+            type: CardCondition,
+            required: true
+        },
         description: {
             type: String,
-            required: true
+            required: false
         },
         price: {
             type: Number,
@@ -34,7 +41,7 @@ const cardSchema = new mongoose.Schema({
         userId: {
             type: String,
             required: true
-        },
+        }
     },
     {
         // Serialize the response
