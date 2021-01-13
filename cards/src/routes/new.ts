@@ -12,7 +12,9 @@ router.post('/api/cards', requireAuth, requireAuth, [
     body('condition')
         .not()
         .isEmpty()
-        .custom((input) => Object.values(CardCondition).includes(input))
+        .custom((input: string) =>
+            (Object.values(CardCondition) as string[])
+                .includes(input))
         .withMessage('Not a valid card condition'),
     body('price')
         .isFloat({gt: 0})
