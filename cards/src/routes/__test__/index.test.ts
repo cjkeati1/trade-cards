@@ -2,6 +2,8 @@ import request from 'supertest';
 import {app} from "../../app";
 import {CardCondition} from "@ckcards/common/build";
 
+jest.mock('../../nats-wrapper');
+
 const createCard = () => {
     const title = 'Borrelsword Dragon';
     const condition = CardCondition.Mint;

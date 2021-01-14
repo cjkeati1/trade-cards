@@ -8,6 +8,8 @@ import {
     CardCondition
 } from "@ckcards/common";
 import {Card} from "../models/card";
+import {CardCreatedPublisher} from "../events/publishers/card-created-publisher";
+import {natsWrapper} from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -46,6 +48,16 @@ router.put('/api/cards/:id', requireAuth, [
     });
 
     await card.save();
+
+    new CardCreatedPublisher(natsWrapper.client).publish({
+        id: card.id,
+        title: card.title,
+        description: card.description,
+        condition: card.condition,
+        price: card.price,
+        userId: card.userId
+    });
+
 
     res.send(card);
 });

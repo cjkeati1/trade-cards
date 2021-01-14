@@ -3,6 +3,8 @@ import {app} from '../../app';
 import {CardCondition} from "@ckcards/common/build";
 import {Card} from "../../models/card";
 
+jest.mock('../../nats-wrapper');
+
 it('has a route handler listening to /api/cards for post requests', async () => {
     const res = await request(app)
         .post('/api/cards')
