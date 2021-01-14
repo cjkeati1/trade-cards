@@ -2,10 +2,11 @@ import express, {Request, Response} from "express";
 import {requireAuth, validateRequest, CardCondition} from "@ckcards/common";
 import {body} from "express-validator";
 import {Card} from "../models/card";
+import {CardCreatedPublisher} from "../events/publishers/card-created-publisher";
 
 const router = express.Router();
 
-router.post('/api/cards', requireAuth, requireAuth, [
+router.post('/api/cards', requireAuth, [
     body('title')
         .not()
         .isEmpty()
@@ -32,6 +33,15 @@ router.post('/api/cards', requireAuth, requireAuth, [
     });
 
     await card.save();
+
+    new CardCreatedPublisher(client).publish({
+        id: card.id,
+        title: card.title,
+        description: card.description,
+        condition: card.condition,
+        price: card.price,
+        userId: card.userId
+    });
 
     res.status(201).send(card);
 });
