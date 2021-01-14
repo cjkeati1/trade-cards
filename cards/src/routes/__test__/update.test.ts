@@ -3,7 +3,7 @@ import {app} from "../../app";
 import mongoose from 'mongoose';
 import {CardCondition} from "@ckcards/common";
 
-jest.mock('../../nats-wrapper');
+
 
 import {CardUpdatedPublisher} from "../../events/publishers/card-updated-publisher";
 import {natsWrapper} from "../../nats-wrapper";

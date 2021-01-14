@@ -3,7 +3,6 @@ import {app} from '../../app';
 import {CardCondition} from "@ckcards/common";
 import mongoose from "mongoose";
 
-jest.mock('../../nats-wrapper');
 
 it('returns a 404 if the card is not found', async () => {
     const id = new mongoose.Types.ObjectId().toHexString();

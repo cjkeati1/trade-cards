@@ -3,7 +3,7 @@ import {app} from '../../app';
 import {CardCondition} from "@ckcards/common/build";
 import {Card} from "../../models/card";
 
-jest.mock('../../nats-wrapper');
+import {natsWrapper} from "../../nats-wrapper";
 
 it('has a route handler listening to /api/cards for post requests', async () => {
     const res = await request(app)
@@ -104,4 +104,24 @@ it('creates a card with valid inputs', async () => {
     expect(cards[0].condition).toEqual(condition);
     expect(cards[0].description).toEqual(description);
 
+});
+
+it('publishes an event', async () => {
+    const title = 'Borrelsword Dragon';
+    const condition = CardCondition.Mint;
+    const description = 'Maximum Gold - Singles';
+    const price = 4;
+
+    await request(app)
+        .post('/api/cards')
+        .set('Cookie', global.getAuthCookie())
+        .send({
+            title,
+            condition,
+            description,
+            price
+        })
+        .expect(201);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
