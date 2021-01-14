@@ -3,6 +3,7 @@ import {requireAuth, validateRequest, CardCondition} from "@ckcards/common";
 import {body} from "express-validator";
 import {Card} from "../models/card";
 import {CardCreatedPublisher} from "../events/publishers/card-created-publisher";
+import {natsWrapper} from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ router.post('/api/cards', requireAuth, [
 
     await card.save();
 
-    new CardCreatedPublisher(client).publish({
+    new CardCreatedPublisher(natsWrapper.client).publish({
         id: card.id,
         title: card.title,
         description: card.description,
