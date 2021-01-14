@@ -139,3 +139,28 @@ it('updates the card provided valid inputs', async () => {
     expect(updatedCard.body.description).toEqual('new description');
     expect(updatedCard.body.price).toEqual(7.50);
 });
+
+it('publishes an event', async () => {
+    const cookie = global.getAuthCookie();
+    const res = await request(app)
+        .post('/api/cards')
+        .set('Cookie', cookie)
+        .send({
+            title,
+            condition,
+            description,
+            price,
+        });
+    await request(app)
+        .put(`/api/cards/${res.body.id}`)
+        .set('Cookie', cookie)
+        .send({
+            title,
+            condition,
+            description: 'new description',
+            price: 7.50,
+        })
+        .expect(200);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
