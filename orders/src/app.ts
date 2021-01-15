@@ -4,7 +4,10 @@ import {json} from 'body-parser';
 import cookieSession from "cookie-session";
 
 import {errorHandler, NotFoundError, currentUser} from "@ckcards/common";
-
+import {newOrderRouter} from "./routes/new";
+import {showOrderRouter} from "./routes/show";
+import {deleteOrderRouter} from "./routes/delete";
+import {indexOrderRouter} from "./routes";
 
 const app = express();
 app.set('trust proxy', true);
@@ -19,6 +22,10 @@ app.use(
 
 app.use(currentUser);
 
+app.use(newOrderRouter);
+app.use(showOrderRouter);
+app.use(deleteOrderRouter);
+app.use(indexOrderRouter);
 
 // User goes to a route that is not defined
 app.all('*', async () => {
