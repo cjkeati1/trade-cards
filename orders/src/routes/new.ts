@@ -13,6 +13,8 @@ import {Order} from "../../models/order";
 
 const router = express.Router();
 
+const EXPIRATION_WINDOW_SECONDS = 60;
+
 router.post('/api/orders',
     requireAuth,
     [
@@ -38,17 +40,29 @@ router.post('/api/orders',
 
 
         const isReserved = card.isReserved();
-        
+
         if (isReserved) {
             throw new BadRequestError('Card is already reserved');
         }
 
         // Calculate an expiration date for this order
+        const expiration = new Date();
+        expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
 
         // Build the order and save it to the db
+        const order = Order.build({
+            userId: req.currentUser!.id,
+            status: OrderStatus.Created,
+            expiresAt: expiration,
+            card
+        });
 
-        // Publish an event saying that an order was created
+        // TODO: Publish an event saying that an order was created
 
+
+        await order.save();
+
+        res.status(201).send(order);
     });
 
 export {router as newOrderRouter};
