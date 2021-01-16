@@ -27,7 +27,7 @@ router.patch('/api/orders/:orderId', requireAuth,
         const order = await Order.findById(orderId).populate('card');
 
         if (!order) {
-            return new NotFoundError();
+            throw new NotFoundError();
         }
 
         if (order.userId !== req.currentUser!.id) {
