@@ -9,7 +9,6 @@ interface OrderAttrs {
     card: CardDoc;
 }
 
-
 interface OrderDoc extends mongoose.Document {
     userId: string;
     status: OrderStatus;
