@@ -11,6 +11,7 @@ import {Order} from "../models/order";
 
 const router = express.Router();
 
+
 router.get('/api/orders/:orderId', requireAuth,
     [
         param('orderId')
@@ -24,11 +25,11 @@ router.get('/api/orders/:orderId', requireAuth,
         const order = await Order.findById(req.params.orderId).populate('card');
 
         if (!order) {
-            return new NotFoundError();
+            throw new NotFoundError();
         }
 
-        if (req.currentUser!.id !== order.userId) {
-            return new NotAuthorizedError();
+        if (order.userId !== req.currentUser!.id) {
+            throw new NotAuthorizedError();
         }
 
         res.send(order);

@@ -33,12 +33,34 @@ it('returns 400 if an invalid order id is supplied', async () => {
         .expect(400);
 });
 
-it('returns 404 if the order DNE', async () => {
+it('returns 401 if a user tries to fetch another user\'s order', async () => {
     const user = global.getAuthCookie();
+    const userTwo= global.getAuthCookie();
+
+    const card = await buildCard();
+
+    // Create one order
+    const {body: order} = await request(app)
+        .post('/api/orders')
+        .set('Cookie', user)
+        .send({cardId: card.id})
+        .expect(201);
 
     // Make request to fetch the order
     await request(app)
-        .get(`/api/orders/${mongoose.Types.ObjectId().toHexString()}`)
+        .get(`/api/orders/${order.id}`)
+        .set('Cookie', userTwo)
+        .send()
+        .expect(401);
+});
+
+it('returns 404 if the order DNE', async () => {
+    const user = global.getAuthCookie();
+
+
+    // Make request to fetch the order
+    await request(app)
+        .get(`/api/orders/${new mongoose.Types.ObjectId().toHexString()}`)
         .set('Cookie', user)
         .send()
         .expect(404);
@@ -56,7 +78,6 @@ it('fetches a user\'s orders', async () => {
         .set('Cookie', user)
         .send({cardId: card.id})
         .expect(201);
-
 
     // Make request to fetch the order
     const {body: fetchedOrder} = await request(app)
