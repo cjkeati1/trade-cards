@@ -8,8 +8,8 @@ import {
 } from "@ckcards/common";
 import {body} from "express-validator";
 import mongoose from "mongoose";
-import {Card} from "../../models/card";
-import {Order} from "../../models/order";
+import {Card} from "../models/card";
+import {Order} from "../models/order";
 
 const router = express.Router();
 
@@ -24,9 +24,6 @@ router.post('/api/orders',
             .custom((input: string) =>
                 mongoose.Types.ObjectId.isValid(input))
             .withMessage('CardId is required'),
-        body('price')
-            .isFloat({gt: 0})
-            .withMessage('Price must be greater than 0'),
     ],
     validateRequest,
     async (req: Request, res: Response) => {
@@ -39,7 +36,7 @@ router.post('/api/orders',
         }
 
 
-        const isReserved = card.isReserved();
+        const isReserved = await card.isReserved();
 
         if (isReserved) {
             throw new BadRequestError('Card is already reserved');

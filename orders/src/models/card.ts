@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import {CardCondition} from "@ckcards/common";
-import {Order} from "./order";
-import {OrderStatus} from "@ckcards/common";
+import {Order, OrderStatus} from "./order";
 
 interface CardAttrs {
     title: string;
@@ -67,8 +66,9 @@ cardSchema.methods.isReserved = async function () {
         }
     });
 
+
     // Makes sure to return false is it is null
-    return !!existingOrder;
+    return existingOrder !== null;
 };
 
 

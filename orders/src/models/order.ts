@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 import {CardDoc} from "./card";
 import {OrderStatus} from "@ckcards/common";
 
+
+export {OrderStatus};
+
 interface OrderAttrs {
     userId: string;
     status: OrderStatus;
