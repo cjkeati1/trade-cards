@@ -2,6 +2,7 @@ import request from 'supertest';
 import {app} from '../../app';
 import {Card} from "../../models/card";
 import {CardCondition} from "@ckcards/common";
+import mongoose from "mongoose";
 
 const buildCard = async () => {
     const title = 'Borrelsword Dragon';
@@ -20,6 +21,28 @@ const buildCard = async () => {
 
     return card;
 };
+
+it('returns 400 if an invalid order id is supplied', async () => {
+    const user = global.getAuthCookie();
+
+    // Make request to fetch the order
+    await request(app)
+        .get(`/api/orders/invalidId`)
+        .set('Cookie', user)
+        .send()
+        .expect(400);
+});
+
+it('returns 404 if the order DNE', async () => {
+    const user = global.getAuthCookie();
+
+    // Make request to fetch the order
+    await request(app)
+        .get(`/api/orders/${mongoose.Types.ObjectId().toHexString()}`)
+        .set('Cookie', user)
+        .send()
+        .expect(404);
+});
 
 it('fetches a user\'s orders', async () => {
     // Create a card
