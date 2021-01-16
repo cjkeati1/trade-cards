@@ -36,18 +36,10 @@ router.post('/api/orders',
             throw new NotFoundError;
         }
 
-        // Make sure that the card is not already reserved or bought
-        const existingOrder = await Order.findOne({
-            card: card,
-            status: {
-                $in: [
-                    OrderStatus.Created,
-                    OrderStatus.Complete
-                ]
-            }
-        });
 
-        if (!existingOrder) {
+        const isReserved = card.isReserved();
+        
+        if (isReserved) {
             throw new BadRequestError('Card is already reserved');
         }
 
