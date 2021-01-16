@@ -19,4 +19,6 @@ export * from './events/types/subjects';
 export * from './events/types/order-status';
 export * from './events/card/card-created-event';
 export * from './events/card/card-updated-event';
+export * from './events/order/order-created-event';
+export * from './events/order/order-cancelled-event';
 
