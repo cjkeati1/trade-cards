@@ -4,6 +4,7 @@ import {Card} from "../../models/card";
 import {Order, OrderStatus} from "../../models/order";
 import {CardCondition} from "@ckcards/common";
 import mongoose from "mongoose";
+import {natsWrapper} from "../../nats-wrapper";
 
 const buildCard = async () => {
     const title = 'Borrelsword Dragon';
@@ -76,7 +77,7 @@ it('Marks an order as cancelled', async () => {
         .set('Cookie', user)
         .send({cardId: card.id})
         .expect(201);
-    
+
     // Make request to cancel the order
     await request(app)
         .patch(`/api/orders/${order.id}`)
@@ -87,4 +88,29 @@ it('Marks an order as cancelled', async () => {
     // Make sure the order is cancelled
     const updatedOrder = await Order.findById(order.id);
     expect(updatedOrder!.status).toEqual(OrderStatus.Cancelled);
+});
+
+it('emits an order cancelled event', async () => {
+    // Create a card
+    const card = await buildCard();
+
+    const user = global.getAuthCookie();
+
+    // Create one order
+    const {body: order} = await request(app)
+        .post('/api/orders')
+        .set('Cookie', user)
+        .send({cardId: card.id})
+        .expect(201);
+
+
+    // Make request to cancel the order
+    await request(app)
+        .patch(`/api/orders/${order.id}`)
+        .set('Cookie', user)
+        .send()
+        .expect(204);
+
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

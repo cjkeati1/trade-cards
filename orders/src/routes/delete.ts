@@ -9,6 +9,8 @@ import {
 import {Order} from "../models/order";
 import {param} from "express-validator";
 import mongoose from "mongoose";
+import {natsWrapper} from "../nats-wrapper";
+import {OrderCancelledPublisher} from "../events/publishers/order-cancelled-publisher";
 
 const router = express.Router();
 
@@ -37,6 +39,13 @@ router.patch('/api/orders/:orderId', requireAuth,
         order.status = OrderStatus.Cancelled;
         await order.save();
 
+        // Publish an event when the order is cancelled
+        new OrderCancelledPublisher(natsWrapper.client).publish({
+            id: order.id,
+            card: {
+                id: order.card.id
+            }
+        });
 
         res.status(204).send(order);
     });

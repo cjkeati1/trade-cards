@@ -67,3 +67,26 @@ it('reserves a card', async () => {
         .expect(201);
 });
 
+it('emits an order created event', async () => {
+    const title = 'Borrelsword Dragon';
+    const condition = CardCondition.Mint;
+    const description = 'Maximum Gold - Singles';
+    const price = 4;
+
+    const card = Card.build({
+        title,
+        condition,
+        description,
+        price,
+    });
+    await card.save();
+
+    await request(app)
+        .post('/api/orders')
+        .set('Cookie', global.getAuthCookie())
+        .send({cardId: card.id})
+        .expect(201);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
+
