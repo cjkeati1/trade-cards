@@ -37,7 +37,7 @@ it('returns an error if the card is already reserved', async () => {
         expiresAt: new Date()
     });
     await order.save();
-    
+
     await request(app)
         .post('/api/orders')
         .set('Cookie', global.getAuthCookie())
