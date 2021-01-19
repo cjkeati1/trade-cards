@@ -55,7 +55,8 @@ router.put('/api/cards/:id', requireAuth, [
         description: card.description,
         condition: card.condition,
         price: card.price,
-        userId: card.userId
+        userId: card.userId,
+        version: card.version
     });
 
 

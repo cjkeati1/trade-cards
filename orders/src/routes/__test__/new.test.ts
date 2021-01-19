@@ -27,6 +27,7 @@ it('returns an error if the card is already reserved', async () => {
         condition,
         description,
         price,
+        id: mongoose.Types.ObjectId().toHexString()
     });
     await card.save();
 
@@ -56,6 +57,7 @@ it('reserves a card', async () => {
         condition,
         description,
         price,
+        id: mongoose.Types.ObjectId().toHexString()
     });
     await card.save();
 
@@ -78,6 +80,7 @@ it('emits an order created event', async () => {
         condition,
         description,
         price,
+        id: mongoose.Types.ObjectId().toHexString()
     });
     await card.save();
 

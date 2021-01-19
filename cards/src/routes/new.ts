@@ -30,7 +30,7 @@ router.post('/api/cards', requireAuth, [
         condition,
         description,
         price,
-        userId: req.currentUser!.id
+        userId: req.currentUser!.id,
     });
 
     await card.save();
@@ -41,7 +41,8 @@ router.post('/api/cards', requireAuth, [
         description: card.description,
         condition: card.condition,
         price: card.price,
-        userId: card.userId
+        userId: card.userId,
+        version: card.version
     });
 
     res.status(201).send(card);

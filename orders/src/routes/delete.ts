@@ -43,8 +43,9 @@ router.patch('/api/orders/:orderId', requireAuth,
         new OrderCancelledPublisher(natsWrapper.client).publish({
             id: order.id,
             card: {
-                id: order.card.id
-            }
+                id: order.card.id,
+            },
+            version: order.version
         });
 
         res.status(204).send(order);

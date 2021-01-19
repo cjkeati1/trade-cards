@@ -67,7 +67,8 @@ router.post('/api/orders',
             card: {
                 id: card.id,
                 price: card.price
-            }
+            },
+            version: order.version
         });
 
         res.status(201).send(order);

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {CardCondition} from "@ckcards/common";
 import {Order, OrderStatus} from "./order";
+import {updateIfCurrentPlugin} from "mongoose-update-if-current";
 
 interface CardAttrs {
     id: string;
@@ -19,6 +20,7 @@ export interface CardDoc extends mongoose.Document {
     condition: CardCondition;
     description: string;
     price: number;
+    version: number;
 
     isReserved(): Promise<boolean>
 }
@@ -60,6 +62,9 @@ cardSchema.statics.build = (attrs: CardAttrs) => {
         price: attrs.price
     });
 };
+
+cardSchema.set('versionKey', 'version');
+cardSchema.plugin(updateIfCurrentPlugin);
 
 
 cardSchema.methods.isReserved = async function () {

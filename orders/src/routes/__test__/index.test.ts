@@ -16,7 +16,8 @@ const buildCard = async () => {
         title,
         condition,
         description,
-        price
+        price,
+        id: mongoose.Types.ObjectId().toHexString()
     });
 
     await card.save();
