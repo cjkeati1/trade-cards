@@ -43,7 +43,11 @@ const cardSchema = new mongoose.Schema({
             required: true
         }
     },
+
     {
+        optimisticConcurrency: true,
+        versionKey: "version",
+        
         // Serialize the response
         toJSON: {
             transform(doc, ret) {
