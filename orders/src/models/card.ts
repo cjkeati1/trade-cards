@@ -3,6 +3,7 @@ import {CardCondition} from "@ckcards/common";
 import {Order, OrderStatus} from "./order";
 
 interface CardAttrs {
+    id: string;
     title: string;
     condition: CardCondition;
     description: string;
@@ -51,8 +52,15 @@ const cardSchema = new mongoose.Schema({
     });
 
 cardSchema.statics.build = (attrs: CardAttrs) => {
-    return new Card(attrs);
+    return new Card({
+        _id: attrs.id,
+        title: attrs.title,
+        condition: attrs.condition,
+        description: attrs.description,
+        price: attrs.price
+    });
 };
+
 
 cardSchema.methods.isReserved = async function () {
     // Make sure that the card is not already reserved or bought
