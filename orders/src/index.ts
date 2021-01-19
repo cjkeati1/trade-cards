@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import {app} from "./app";
 import {natsWrapper} from "./nats-wrapper";
+import {CardCreatedListener} from "./events/listeners/card-created-listener";
+import {CardUpdatedListener} from "./events/listeners/card-updated-listener";
 
 const start = async () => {
     if (!process.env.JWT_KEY) {
@@ -34,6 +36,9 @@ const start = async () => {
         });
         process.on('SIGINT', () => natsWrapper.client.close());
         process.on('SIGTERM', () => natsWrapper.client.close());
+
+        new CardCreatedListener(natsWrapper.client).listen();
+        new CardUpdatedListener(natsWrapper.client).listen();
 
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
