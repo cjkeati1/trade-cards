@@ -1,10 +1,11 @@
-import {Subjects} from "../types/subjects";
+import {Subjects} from "../..";
 import {CardCondition} from "../..";
 
 export interface CardUpdatedEvent {
     subject: Subjects.CardUpdated;
     data: {
         id: string;
+        version: number;
         title: string;
         condition: CardCondition
         description: string;

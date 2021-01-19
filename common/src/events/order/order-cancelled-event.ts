@@ -3,7 +3,8 @@ import {OrderStatus, Subjects} from "../..";
 export interface OrderCancelledEvent {
     subject: Subjects.OrderCancelled;
     data: {
-        id: string,
+        id: string;
+        version: number;
         card: {
             id: string;
         }
