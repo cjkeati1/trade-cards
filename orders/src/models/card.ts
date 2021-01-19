@@ -13,6 +13,8 @@ interface CardAttrs {
 
 interface CardModel extends mongoose.Model<CardDoc> {
     build(attrs: CardAttrs): CardDoc;
+
+    findByEvent(event: { id: string, version: number }): Promise<CardDoc> | null;
 }
 
 export interface CardDoc extends mongoose.Document {
@@ -52,6 +54,13 @@ const cardSchema = new mongoose.Schema({
             }
         }
     });
+
+cardSchema.statics.findByEvent = (event: { id: string, version: number }) => {
+    return Card.findOne({
+        _id: event.id,
+        version: event.version - 1
+    });
+};
 
 cardSchema.statics.build = (attrs: CardAttrs) => {
     return new Card({

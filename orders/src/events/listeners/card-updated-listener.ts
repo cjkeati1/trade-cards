@@ -8,7 +8,7 @@ export class CardUpdatedListener extends Listener<CardUpdatedEvent> {
     queueGroupName = queueGroupName;
 
     async onMessage(data: CardUpdatedEvent['data'], msg: Message) {
-        const card = await Card.findById(data.id);
+        const card = await Card.findByEvent(data);
 
         if (!card) {
             throw new Error('Card not found');
