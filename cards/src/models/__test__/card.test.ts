@@ -40,3 +40,27 @@ it('implements optimistic concurrency control', async () => {
 
     throw new Error('Should not reach this point');
 });
+
+it('increments the version number on multiple saves', async () => {
+    const title = 'Borrelsword Dragon';
+    const condition = CardCondition.Mint;
+    const description = 'Maximum Gold - Singles';
+    const price = 4;
+
+    const card = Card.build({
+        userId: '123',
+        title,
+        condition,
+        description,
+        price
+    });
+
+    await card.save();
+    expect(card.version).toEqual(0);
+    card!.set({price: 17.50});
+    await card.save();
+    expect(card.version).toEqual(1);
+    card!.set({price: 15});
+    await card.save();
+    expect(card.version).toEqual(2);
+});

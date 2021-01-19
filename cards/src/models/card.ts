@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import {CardCondition} from "@ckcards/common";
+import {updateIfCurrentPlugin} from "mongoose-update-if-current";
 
 interface CardAttrs {
     title: string;
@@ -18,6 +19,7 @@ interface CardDoc extends mongoose.Document {
     condition: CardCondition;
     description: string;
     price: number;
+    version: number;
     userId: string;
 }
 
@@ -45,9 +47,6 @@ const cardSchema = new mongoose.Schema({
     },
 
     {
-        optimisticConcurrency: true,
-        versionKey: "version",
-        
         // Serialize the response
         toJSON: {
             transform(doc, ret) {
@@ -56,6 +55,9 @@ const cardSchema = new mongoose.Schema({
             }
         }
     });
+
+cardSchema.set('versionKey', 'version');
+cardSchema.plugin(updateIfCurrentPlugin);
 
 cardSchema.statics.build = (attrs: CardAttrs) => {
     return new Card(attrs);
