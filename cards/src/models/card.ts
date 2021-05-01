@@ -21,6 +21,7 @@ interface CardDoc extends mongoose.Document {
     price: number;
     version: number;
     userId: string;
+    orderId?: string;
 }
 
 const cardSchema = new mongoose.Schema({
@@ -43,7 +44,10 @@ const cardSchema = new mongoose.Schema({
         userId: {
             type: String,
             required: true
-        }
+        },
+        orderId: {
+            type: String
+        },
     },
 
     {
