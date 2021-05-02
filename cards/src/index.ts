@@ -22,7 +22,6 @@ const start = async () => {
     }
 
     try {
-
         await natsWrapper
             .connect(
                 process.env.NATS_CLUSTER_ID,

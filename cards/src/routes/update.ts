@@ -5,7 +5,8 @@ import {
     validateRequest,
     NotFoundError,
     NotAuthorizedError,
-    CardCondition
+    CardCondition,
+    BadRequestError
 } from "@ckcards/common";
 import {Card} from "../models/card";
 import {CardCreatedPublisher} from "../events/publishers/card-created-publisher";
@@ -33,6 +34,11 @@ router.put('/api/cards/:id', requireAuth, [
 
     if (!card) {
         throw new NotFoundError;
+    }
+
+    // Don't update if the card is reserved
+    if (card.orderId !== undefined) {
+        throw new BadRequestError('Cannot edit a reserved card');
     }
 
     if (card.userId !== req.currentUser!.id) {

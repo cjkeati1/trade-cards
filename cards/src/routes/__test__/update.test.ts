@@ -7,6 +7,7 @@ import {CardCondition} from "@ckcards/common";
 
 import {CardUpdatedPublisher} from "../../events/publishers/card-updated-publisher";
 import {natsWrapper} from "../../nats-wrapper";
+import {Card} from "../../models/card";
 
 const title = 'Borrelsword Dragon';
 const condition = CardCondition.Mint;
@@ -163,4 +164,34 @@ it('publishes an event', async () => {
         .expect(200);
 
     expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
+
+it('rejects edit if the card is reserved', async () => {
+    const cookie = global.getAuthCookie();
+    const res = await request(app)
+        .post('/api/cards')
+        .set('Cookie', cookie)
+        .send({
+            title,
+            condition,
+            description,
+            price,
+        });
+
+    const card = await Card.findById(res.body.id);
+
+    // Set the Order ID, simulating an order of the card
+    card!.set({orderId: mongoose.Types.ObjectId().toHexString()});
+    await card!.save();
+
+    await request(app)
+        .put(`/api/cards/${res.body.id}`)
+        .set('Cookie', cookie)
+        .send({
+            title: 'New Title',
+            condition,
+            description,
+            price: 999,
+        })
+        .expect(400);
 });
