@@ -11,5 +11,6 @@ export interface CardUpdatedEvent {
         description: string;
         price: number;
         userId: string;
+        orderId?: string;
     };
 }

@@ -6,16 +6,20 @@ interface Event {
     data: any;
 }
 
+const NUMBER_OF_SECONDS_TO_WAIT = 5;
+const MILLISECONDS_IN_A_SECOND = 1000;
+
 export abstract class Listener<T extends Event> {
     abstract subject: T['subject'];
     abstract queueGroupName: string;
 
     abstract onMessage(data: T['data'], msg: Message): void;
 
-    private client: Stan;
+    protected client: Stan;
+
 
     // Set wait time to be 5 seconds
-    protected ackWait = 5 * 1000;
+    protected ackWait = NUMBER_OF_SECONDS_TO_WAIT * MILLISECONDS_IN_A_SECOND;
 
 
     constructor(client: Stan) {
@@ -28,7 +32,7 @@ export abstract class Listener<T extends Event> {
             .setDeliverAllAvailable()
             .setManualAckMode(true)
             .setAckWait(this.ackWait)
-            .setDurableName(this.queueGroupName)
+            .setDurableName(this.queueGroupName);
     }
 
     listen() {
@@ -40,7 +44,7 @@ export abstract class Listener<T extends Event> {
 
         subscription.on('message', (msg: Message) => {
             console.log(`Message received: ${this.subject} /
-             ${this.queueGroupName}`)
+             ${this.queueGroupName}`);
 
             const parsedData = this.parseMessage(msg);
             this.onMessage(parsedData, msg);
