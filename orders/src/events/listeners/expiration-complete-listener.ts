@@ -22,6 +22,10 @@ export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent
             throw new Error('Order not found');
         }
 
+        if (order.status === OrderStatus.Complete) {
+            return msg.ack();
+        }
+
         // If the order expired, we need to cancel it and then publish an Order Cancelled
         // event
         order.set({
